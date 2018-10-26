@@ -41,8 +41,8 @@ public:
 	bool isEmpty();
 
 	//prints the element in the queue
-	void printQueue();
-
+	void printWaitQueue();
+	void printRunningQueue();
 	//a job with the mimimum value for n_ticks
 	jobs FindShortest();
 

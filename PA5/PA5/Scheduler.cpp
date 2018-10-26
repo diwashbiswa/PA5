@@ -4,10 +4,6 @@ Scheduler::Scheduler()
 {
 	this->P = 1000;
 	this->ID = 0;
-	//job1 = nullptr;
-	//this->job_description = "";
-	//this->n_procs = 0;
-	//this->n_ticks = 0;
 }
 
 //setter/getters for queue
@@ -82,22 +78,30 @@ bool Scheduler::isEmpty()
 	}
 	return false;
 }
+void Scheduler::printRunningQueue()
+{
+	{
+		this->running_queueCopy = this->running_queue;
 
-void Scheduler::printQueue()
+		cout << "---Running Queue---" << endl;
+		while (!running_queueCopy.empty())
+		{
+			cout << "Job ID: " << running_queueCopy.top().jobID << endl;
+			cout << "Job Description: " << running_queueCopy.top().job_description << endl;
+			cout << "Job Processors: " << running_queueCopy.top().n_procs << endl;
+			cout << "Job Ticks Left: " << running_queueCopy.top().n_ticks << endl << endl;
+			running_queueCopy.pop();
+		}
+		cout << endl;
+
+	}
+
+}
+void Scheduler::printWaitQueue()
 {
 	this->wait_queueCopy = this->wait_queue;
 
-	//while (!this->wait_queue.empty())
-	//{
-	//	cout << this->wait_queue.top().n_procs << endl;
-	//	cout << this->wait_queue.top().jobID << endl;
-	//	cout << this->wait_queue.top().job_description << endl;
-	//	cout << this->wait_queue.top().n_ticks << endl;
-	//	this->wait_queue.pop();
-	//	cout << endl;
-	//}
-	//cout << endl;
-
+	cout << "---Wait Queue---" << endl;
 	while (!wait_queueCopy.empty())
 	{
 		cout << wait_queueCopy.top().jobID << endl;
@@ -156,6 +160,7 @@ void Scheduler::RunJob(jobs job)
 
 void Scheduler::Decrement()
 {
+	priority_queue <jobs> pqTemp;
 	this->running_queueCopy = this->running_queue; //
 
 	while (!running_queue.empty())
@@ -167,17 +172,18 @@ void Scheduler::Decrement()
 
 		t.n_ticks -= 1;
 
-		this->running_queue.push(t);
+		pqTemp.push(t);
 
 	}
+	running_queue = pqTemp;
 }
 
 void Scheduler::Release()
 {
-	if (this->running_queueCopy.top().n_ticks == 0)
+	if (this->running_queue.top().n_ticks == 0)
 	{
-		this->free_pool_processors += running_queueCopy.top().n_procs;
-		this->running_queueCopy.pop();
+		this->P += running_queue.top().n_procs;
+		this->running_queue.pop();
 	}
 }
 

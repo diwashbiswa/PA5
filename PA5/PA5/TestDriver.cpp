@@ -12,14 +12,17 @@ int main(void)
 {
 	Scheduler schedule;
 
+	//schedule.ReadFromFile();
+	
 	for (int i = 0; i < 3; i++)
 	{
 		schedule.Tick();
 	}
 	
-	schedule.printQueue();
 
-	input.close();
+	schedule.printRunningQueue();
+
+	//input.close();
 
 	return 0;
 }
