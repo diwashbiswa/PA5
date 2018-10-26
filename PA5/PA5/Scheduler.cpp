@@ -10,6 +10,39 @@ Scheduler::Scheduler()
 	//this->n_ticks = 0;
 }
 
+//setter/getters for queue
+void Scheduler::setRunningQueue(priority_queue<jobs> newRunningQueue)
+{
+	this->running_queue = newRunningQueue;
+}
+
+priority_queue<jobs> Scheduler::getRunningQueue()
+{
+	return this->running_queue;
+}
+
+void Scheduler::setTicks(int newNTicks)
+{
+	//this->getRunningQueue().top().n_ticks= newNTicks;
+}
+
+int Scheduler::getTicks()
+{
+	return this->running_queue.top().n_ticks;
+}
+
+void Scheduler::ReadFromFile()
+{
+	string line, delimeter = " ";
+
+	ifstream input("input.txt");
+	while (!input.eof())
+	{
+		getline(input, line);
+	}
+	
+}
+
 void Scheduler::Prompt()
 {
 	cout << "Enter job description (string):";
@@ -123,19 +156,29 @@ void Scheduler::RunJob(jobs job)
 
 void Scheduler::Decrement()
 {
-	this->running_queueCopy = this->running_queue;
+	this->running_queueCopy = this->running_queue; //
 
 	while (!running_queue.empty())
 	{
 		job1.n_ticks -= 1;
 
-		this->running_queue.top()->n_ticks -= 1;
+		jobs t = this->running_queue.top();
 		this->running_queue.pop();
+
+		t.n_ticks -= 1;
+
+		this->running_queue.push(t);
+
 	}
 }
 
 void Scheduler::Release()
 {
+	if (this->running_queueCopy.top().n_ticks == 0)
+	{
+		this->free_pool_processors += running_queueCopy.top().n_procs;
+		this->running_queueCopy.pop();
+	}
 }
 
 void Scheduler::Find()
@@ -153,22 +196,3 @@ void Scheduler::Tick()
 }
 
 
-void Scheduler::setRunningQueue(priority_queue<jobs> newRunningQueue)
-{
-	this->running_queue = newRunningQueue;
-}
-
-priority_queue<jobs> Scheduler::getRunningQueue()
-{
-	return this->running_queue;
-}
-
-void Scheduler::setTicks(int newNTicks)
-{
-	//this->getRunningQueue().top().n_ticks= newNTicks;
-}
-
-int Scheduler::getTicks()
-{
-	return this->running_queue.top().n_ticks;
-}

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <queue>
 #include <string>
@@ -13,7 +14,7 @@ struct jobs
 	int n_ticks;
 	string job_description;
 
-	bool operator<(jobs& rhs) 
+	bool operator<(const jobs& rhs) const
 	{
 		return n_ticks > rhs.n_ticks;
 	}
@@ -27,6 +28,8 @@ public:
 
 	//promps the user for new job
 	void Prompt();
+
+	void ReadFromFile();
 
 	//inserts the job into the wait queue (if the user submitted a valid job)
 	//checks if (0 < n_procs <= p) and (n_ticks > 0). If so, it inserts
@@ -75,7 +78,6 @@ public:
 	priority_queue<jobs> getRunningQueue();
 	void setTicks(int newNTicks);
 	int getTicks();
-	priority_queue <jobs> running_queue;
 
 private:
 	int ID;
@@ -83,6 +85,7 @@ private:
 	int free_pool_processors;
 	jobs job1;
 
+	priority_queue <jobs> running_queue;
 	priority_queue <jobs> wait_queue;
 	priority_queue <jobs> wait_queueCopy;
 	priority_queue <jobs> running_queueCopy;

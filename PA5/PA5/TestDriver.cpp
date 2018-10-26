@@ -11,11 +11,6 @@ Comments:
 int main(void)
 {
 	Scheduler schedule;
-	
-/*	clock_t start;
-	start = clock();
-	double timer = (clock() - start) / (double)CLOCKS_PER_SEC;
-*///cout << "MINIMUM: " << schedule.FindShortest() << endl;
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -23,6 +18,8 @@ int main(void)
 	}
 	
 	schedule.printQueue();
+
+	input.close();
 
 	return 0;
 }
