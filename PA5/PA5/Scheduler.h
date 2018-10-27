@@ -1,9 +1,6 @@
 #include <iostream>
-#include <fstream>
-#include <vector>
 #include <queue>
 #include <string>
-#include <time.h>
 
 using namespace std;
 
@@ -47,10 +44,16 @@ public:
 	jobs FindShortest();
 
 	//checks if there are at leat pi processors currently available in the processor
-	bool Scheduler::CheckAvailability(jobs job);
+	bool CheckAvailability(jobs job);
 
-	//removes ji from the wait queue
-	void Scheduler::DeleteShortest(jobs job);
+	//finds the next shortest job (<ji, pi, ti>) from the wait queue and check if sufficient
+	//number of processors are available in the free pool to run it. If so:
+	//	a. remove job Ji from the wait queue;
+	//	b. insert job Ji into the running queue and assign pi processors (from free pool) to that job.
+	//	   if after this first job allocation, there are still more jobs in the wait queue that have sufficient
+	//	   processors to run on, then iteratively keep moving all the next shortest jobs until no mroe processors
+	//	   are available for the next shortest job, or the wait queue becomes empty.
+	void DeleteShortest(jobs job);
 
 	//executes the job from the next tick
 	void RunJob(jobs job);
@@ -63,14 +66,7 @@ public:
 	//tick. Also, any expired job should be automatically removed from the running job queue
 	void Release();
 
-	//finds the next shortest job (<ji, pi, ti>) from the wait queue and check if sufficient
-	//number of processors are available in the free pool to run it. If so:
-	//	a. remove job Ji from the wait queue;
-	//	b. insert job Ji into the running queue and assign pi processors (from free pool) to that job.
-	//	   if after this first job allocation, there are still more jobs in the wait queue that have sufficient
-	//	   processors to run on, then iteratively keep moving all the next shortest jobs until no mroe processors
-	//	   are available for the next shortest job, or the wait queue becomes empty.
-
+	//simulates the program
 	void Tick();
 
 	void setRunningQueue(priority_queue <jobs> newRunningQueue);
@@ -81,9 +77,9 @@ public:
 private:
 	int ID;
 	int P;
-	int free_pool_processors;
-	jobs job1;
+	jobs job1; //structs with attributes
 
+	//data containers
 	priority_queue <jobs> running_queue;
 	priority_queue <jobs> wait_queue;
 	priority_queue <jobs> wait_queueCopy;

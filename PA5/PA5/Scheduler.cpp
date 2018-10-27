@@ -28,18 +28,6 @@ int Scheduler::getTicks()
 	return this->running_queue.top().n_ticks;
 }
 
-void Scheduler::ReadFromFile()
-{
-	string line, delimeter = " ";
-
-	ifstream input("input.txt");
-	while (!input.eof())
-	{
-		getline(input, line);
-	}
-	
-}
-
 void Scheduler::Prompt()
 {
 	cout << "Enter job description (string):";
@@ -190,6 +178,7 @@ void Scheduler::Release()
 	}
 }
 
+//simulates the program
 void Scheduler::Tick()
 {
 	for (int i = 0; i < 10; i++) {

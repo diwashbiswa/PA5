@@ -10,11 +10,7 @@ Comments:
 
 int main(void)
 {
-	Scheduler schedule;
-
-	
+	Scheduler schedule;	
 	schedule.Tick();
-
-
 	return 0;
 }
