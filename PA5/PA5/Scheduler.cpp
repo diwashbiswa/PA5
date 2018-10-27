@@ -2,8 +2,9 @@
 
 Scheduler::Scheduler()
 {
-	this->P = 1000;
+	this->P = 20; //Processor limit for running queue
 	this->ID = 0;
+	
 }
 
 //setter/getters for queue
@@ -60,7 +61,7 @@ void Scheduler::Insert()
 {
 	Scheduler::Prompt();
 
-	if ((job1.n_procs > 0 && job1.n_procs <= this->P) && (job1.n_ticks > 0))
+	if (job1.n_ticks > 0)
 	{
 		this->wait_queue.push(job1);
 	}
@@ -104,10 +105,10 @@ void Scheduler::printWaitQueue()
 	cout << "---Wait Queue---" << endl;
 	while (!wait_queueCopy.empty())
 	{
-		cout << wait_queueCopy.top().jobID << endl;
-		cout << wait_queueCopy.top().job_description << endl;
-		cout << wait_queueCopy.top().n_procs << endl;
-		cout << wait_queueCopy.top().n_ticks << endl;
+		cout << "Job ID: " <<  wait_queueCopy.top().jobID << endl;
+		cout << "Job Description: " << wait_queueCopy.top().job_description << endl;
+		cout << "Job Processors: " << wait_queueCopy.top().n_procs << endl;
+		cout << "Job Ticks Left: " << wait_queueCopy.top().n_ticks << endl;
 		wait_queueCopy.pop();
 	}
 	cout << endl;
@@ -132,7 +133,7 @@ jobs Scheduler::FindShortest()
 
 bool Scheduler::CheckAvailability(jobs job)
 {
-	if ((this->P - job.n_procs) > 0)
+	if ((this->P - job.n_procs) >= 0)
 	{
 		return true;
 	}
@@ -180,25 +181,35 @@ void Scheduler::Decrement()
 
 void Scheduler::Release()
 {
-	if (this->running_queue.top().n_ticks == 0)
-	{
-		this->P += running_queue.top().n_procs;
-		this->running_queue.pop();
+	if (running_queue.size() != 0) {
+		if (this->running_queue.top().n_ticks <= 0)
+		{
+			this->P += running_queue.top().n_procs;
+			this->running_queue.pop();
+		}
 	}
-}
-
-void Scheduler::Find()
-{
 }
 
 void Scheduler::Tick()
 {
-	//Prompt();
-	Insert();
-	DeleteShortest(job1);
-	Decrement();
-	Release();
-	Find();
+	for (int i = 0; i < 10; i++) {
+		Insert();
+		
+		Decrement();
+		Release();
+		while (this->P > 0 && wait_queue.size() != 0 && wait_queue.top().n_procs <= this->P) {
+			DeleteShortest(job1);
+		}
+	}
+
+	while (running_queue.size() != 0 || wait_queue.size() != 0) {
+		Decrement();
+		Release();
+		while (wait_queue.size() != 0 && wait_queue.top().n_procs <= this->P  &&  this->P > 0) {
+			DeleteShortest(wait_queue.top());
+		}
+	}
+	//both prints should be empty
+	printRunningQueue();
+	printWaitQueue();
 }
-
-
