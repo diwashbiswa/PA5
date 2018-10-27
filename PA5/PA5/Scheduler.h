@@ -11,7 +11,7 @@ struct jobs
 {
 	int jobID;
 	int n_procs;
-	int n_ticks;
+	int n_ticks = 0;
 	string job_description;
 
 	bool operator<(const jobs& rhs) const
@@ -70,7 +70,6 @@ public:
 	//	   if after this first job allocation, there are still more jobs in the wait queue that have sufficient
 	//	   processors to run on, then iteratively keep moving all the next shortest jobs until no mroe processors
 	//	   are available for the next shortest job, or the wait queue becomes empty.
-	void Find();
 
 	void Tick();
 
